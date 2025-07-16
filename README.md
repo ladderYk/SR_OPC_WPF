@@ -49,6 +49,7 @@ SR_OPC
 ## TODO
 - 加入其他plc
 - 增加写入功能
+- APP
   
 # 感谢
 ## IoTClient
