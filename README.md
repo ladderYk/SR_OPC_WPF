@@ -26,6 +26,7 @@ SR_OPC
 # 使用说明
 ## 运行项目
 <img width="1280" height="770" alt="1752646037961" src="https://github.com/user-attachments/assets/7f94d257-400b-44dc-9646-9263c2f8693f" />
+将SR_OPC_WEBVIEW\dist 拷贝到 c#运行目录
 <img width="1050" height="600" alt="1752646337357" src="https://github.com/user-attachments/assets/32ca1741-6c28-467d-92f3-a4974155dc2c" />
 
 ## 添加协议
@@ -48,7 +49,7 @@ SR_OPC
 ## TODO
 - 加入其他plc
 - 增加写入功能
-
+  
 # 感谢
 ## IoTClient
 IoTClient (https://github.com/zhaopeiym/IoTClient)  
