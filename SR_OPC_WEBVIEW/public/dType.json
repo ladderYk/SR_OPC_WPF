@@ -1,0 +1,36 @@
+[
+  {
+    "ID": "8edf18bf-5eab-40d5-9c87-f62c8b3df58b",
+    "Name": "s7-1200",
+    "Type": ["Siemens", 1],
+    "Read": [
+      {
+        "Name": "地址",
+        "Addr": "DB100.0",
+        "Len": 2,
+        "Tag": "addr"
+      },
+      {
+        "Name": "12",
+        "Addr": "DB100.7",
+        "Len": 1,
+        "Tag": "abc"
+      }
+    ],
+    "Write": [
+      {
+        "Tag": "heartbeat",
+        "Addr": "DB100.1.1"
+      }
+    ],
+    "Config":[]
+  },
+  {
+    "ID": "ba05ef0c-b62e-4dee-a435-c70015877e97",
+    "Name": "s7-1500",
+    "Type": ["Siemens", 4],
+    "Read": [{ "Addr": "DB100.0", "Len": 3 ,"Tag":"111", "Name":"222"}],
+    "Write": [{ "tag": "heartbeat", "addr": "DB100.1.0" }],
+    "Config":[]
+  }
+]

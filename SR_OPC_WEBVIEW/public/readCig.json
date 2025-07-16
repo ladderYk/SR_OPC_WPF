@@ -1,0 +1,20 @@
+[
+    {
+        "addr": "DB100.0",
+        "name": "111",
+        "offset": 0,
+        "type": 99
+    },
+    {
+        "addr": "",
+        "name": "111",
+        "offset": 1,
+        "type": 0
+    },
+    {
+        "addr": "",
+        "name": "111",
+        "offset": 2,
+        "type": 1
+    }
+]
