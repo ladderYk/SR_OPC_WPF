@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SR_OPC_WPF
+namespace SR_OPC_WPF.Client
 {
     public interface IClient
     {

@@ -117,12 +117,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ComData\BaseVM.cs" />
-    <Compile Include="IClient.cs" />
+    <Compile Include="Client\IClient.cs" />
     <Compile Include="Models\DeviceType.cs" />
     <Compile Include="ResolveDataUtil.cs" />
-    <Compile Include="S7Util.cs" />
-    <Compile Include="AsyncTcpClient.cs" />
-    <Compile Include="ModbusTcp.cs" />
+    <Compile Include="Client\ModbusTcp.cs" />
     <Compile Include="ViewModels\DeviceTypeVM.cs" />
     <Compile Include="ViewModels\DeviceVM.cs" />
     <Compile Include="WebApi\Class1.cs" />
@@ -136,7 +134,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Device.cs" />
-    <Compile Include="TcpClient.cs" />
+    <Compile Include="Client\TcpClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
