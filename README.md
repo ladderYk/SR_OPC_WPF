@@ -30,10 +30,12 @@ SR_OPC
 <img width="1050" height="600" alt="1752646337357" src="https://github.com/user-attachments/assets/32ca1741-6c28-467d-92f3-a4974155dc2c" />
 
 ## 添加协议
-<img width="1040" height="572" alt="1752646999448" src="https://github.com/user-attachments/assets/f46aeec7-4512-40a7-b87a-34a74657817f" />
+<img width="2100" height="1200" alt="076685c4-0b45-4b3a-b00a-3ecf4bb1f091" src="https://github.com/user-attachments/assets/bc888acc-9cf6-4651-8531-3e91e580a28a" />
 添加原始数据，名称为标识，标签为数据的key，地址对应plc或modbus地址，长度对应读取多少位byte。
-<img width="1040" height="572" alt="1752647009425" src="https://github.com/user-attachments/assets/15d035d1-2012-4c44-b2f8-7fde8f7e52b0" />
-点击生成，根据原始数据生成表格，设定数据格式。
+<img width="1227" height="777" alt="c4c4a1d9-76b6-402f-b43b-4a0fb4cf899a" src="https://github.com/user-attachments/assets/87686774-990a-4db2-852d-12cca2d0d64e" />
+设置数据格式
+<img width="2100" height="1200" alt="cf228d4e-58e9-4e72-abe6-e9d5c8063600" src="https://github.com/user-attachments/assets/340d7886-37a9-48ae-a961-6ba581af6b77" />
+添加属性数据，选择原始数据源，设定相关参数。
 
 ## 添加设备
 <img width="1040" height="572" alt="1752646716117" src="https://github.com/user-attachments/assets/9fd47f91-1f4a-47ec-ba8b-b328b07ed8d5" />
