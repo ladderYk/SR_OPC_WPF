@@ -119,9 +119,9 @@ const submitForm = (form) => {
         indexData.Name = form.Name;
         indexData.Type = form.Type;
         indexData.IsBig = form.IsBig;
-        indexData.Read = [...form.Read];
-        indexData.Write = [...form.Write];
-        indexData.Config = [...form.Config];
+        indexData.Read = form.Read.map(v=>({...v}));
+        indexData.Write = form.Write.map(v=>({...v}));
+        indexData.Config = form.Config.map(v=>({...v}));
         editDeviceType(indexData);
     }
     resetForm();
@@ -132,9 +132,9 @@ const setForm = (val) => {
         form.Name = val.Name;
         form.Type = val.Type;
         form.IsBig = val.IsBig;
-        form.Read = [...val.Read];
-        form.Write = [...val.Write];
-        form.Config = [...val.Config];
+        form.Read = val.Read.map(v=>({...v}));
+        form.Write = val.Write.map(v=>({...v}));
+        form.Config = val.Config.map(v=>({...v}));
     } else {
         form.ID = "";
         form.Name = "";

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using SR_OPC_WPF.Models;
+using SR_OPC_WPF.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,7 @@ namespace SR_OPC_WPF
                 if (agv.IsConnected)
                 {
                     Dictionary<string, List<byte>> dataList = new Dictionary<string, List<byte>>();
+                    Dictionary<string, List<object>> dataList1 = new Dictionary<string, List<object>>();
                     List<object> NdataList = new List<object>();
                     List<object> OdataList = new List<object>();
                     DeviceType type = MainWindow.DeviceTypes.FirstOrDefault(d => d.Name == agv.Model);
@@ -77,96 +79,103 @@ namespace SR_OPC_WPF
                     {
                         int len = read.Len;
                         byte[] dataBytes = agv.Client.ReadByte(read.Addr, (ushort)len);
+                        List<object> tdataList = new List<object>();
 
                         if (dataBytes != null)
                         {
-                            dataList.Add(read.Tag, dataBytes.Reverse().ToList());
-                            OdataList.Add(new TypeReadVal() { Data = dataBytes.Reverse().ToList(), Name = read.Name, Tag = read.Tag });
+                            List<byte> rdataBytes = dataBytes.Reverse().ToList();
+                            OdataList.Add(new TypeReadVal() { Data = rdataBytes, Name = read.Name, Tag = read.Tag });
+                            int i = 0;
+                            foreach (int dType in read.Config)
+                            {
+                                switch (dType)
+                                {
+                                    case -2:
+                                        break;
+                                    case 99:
+                                        char[] c = ResolveDataUtil.byteTo8BitArr(rdataBytes[i]);
+                                        tdataList.Add(c);
+                                        break;
+                                    case 0:
+                                        tdataList.Add(rdataBytes[i] == 1);
+                                        break;
+                                    case -1:
+                                    case 1:
+                                        tdataList.Add(rdataBytes[i]);
+                                        break;
+                                    case 2:
+                                        if (rdataBytes.Count >= 2)
+                                        {
+                                            short shortD = BitConverter.ToInt16(type.IsBig ? rdataBytes.Skip(i).Take(2).Reverse().ToArray() : rdataBytes.Skip(i).Take(2).ToArray(), 0);
+                                            tdataList.Add(shortD);
+                                        }
+                                        else
+                                            tdataList.Add(null);
+                                        break;
+                                    case 3:
+                                        if (rdataBytes.Count >= 2)
+                                        {
+                                            ushort shortD = BitConverter.ToUInt16(type.IsBig ? rdataBytes.Skip(i).Take(2).Reverse().ToArray() : rdataBytes.Skip(i).Take(2).ToArray(), 0);
+                                            tdataList.Add(shortD);
+                                        }
+                                        else
+                                            tdataList.Add(null);
+                                        break;
+                                    case 4:
+                                        if (rdataBytes.Count >= 4)
+                                        {
+                                            int intD = BitConverter.ToInt32(type.IsBig ? rdataBytes.Skip(i).Take(4).Reverse().ToArray() : rdataBytes.Skip(i).Take(4).ToArray(), 0);
+                                            tdataList.Add(intD);
+                                        }
+                                        else
+                                            tdataList.Add(null);
+                                        break;
+                                    case 5:
+                                        if (rdataBytes.Count >= 4)
+                                        {
+                                            uint intD = BitConverter.ToUInt32(type.IsBig ? rdataBytes.Skip(i).Take(4).Reverse().ToArray() : rdataBytes.Skip(i).Take(4).ToArray(), 0);
+                                            tdataList.Add(intD);
+                                        }
+                                        else
+                                            tdataList.Add(null);
+                                        break;
+                                }
+                                i++;
+                            }
+                            dataList.Add(read.Tag, rdataBytes);
+                            dataList1.Add(read.Tag, tdataList);
                         }
                     }
                     agv.DataMap = dataList;
+                    agv.DataMap1 = dataList1;
                     agv.DataList = OdataList;
+                    agv.NDataList = NdataList;
                     //JObject agvCfg = MainWindow.AgvCfg.Value<JObject>("s7");
                     //#region 获取数据
+                    JObject obj = new JObject();
                     if (dataList.Count > 0)
                     {
                         foreach (TypeConfig config in type.Config)
                         {
-                            List<byte> data = agv.DataMap[config.Name];
-                            // 结构体
-                            if (config.DType == 99)
+                            string[] source = config.Source;
+                            object data = agv.DataMap1[source[0]][int.Parse(source[1])];
+                            if (data is char[])
                             {
-                                char[] c = ResolveDataUtil.byteTo8BitArr(data[config.Offset]);
-                                NdataList.Add(c);
+                                obj.Add(config.Tag, (data as char[])[config.Offset] == '1');
                             }
-                            // bool
-                            else if (config.DType == 0)
-                            {
-                                NdataList.Add(data[config.Offset] == 1);
-                            }
-                            // byte
-                            else if (config.DType == 1)
-                            {
-                                NdataList.Add(data[config.Offset]);
-                            }
-                            // short
-                            else if (config.DType == 2)
-                            {
-                                if (data.Count >= config.Offset + 2)
-                                {
-                                    short shortD = BitConverter.ToInt16(type.IsBig ? data.Skip(config.Offset).Take(2).Reverse().ToArray() : data.Skip(config.Offset).Take(2).ToArray(), 0);
-                                    NdataList.Add(shortD);
-                                }
-                                else
-                                    NdataList.Add(null);
-
-                            }
-                            // ushort
-                            else if (config.DType == 3)
-                            {
-                                if (data.Count >= config.Offset + 2)
-                                {
-                                    ushort ushortD = BitConverter.ToUInt16(type.IsBig ? data.Skip(config.Offset).Take(2).Reverse().ToArray(): data.Skip(config.Offset).Take(2).ToArray(), 0);
-                                    NdataList.Add(ushortD);
-                                }
-                                else
-                                    NdataList.Add(null);
-                            }
-                            // int
-                            else if (config.DType == 4)
-                            {
-                                if (data.Count >= config.Offset + 4)
-                                {
-                                    int intD = BitConverter.ToInt32(type.IsBig ? data.Skip(config.Offset).Take(4).Reverse().ToArray() : data.Skip(config.Offset).Take(4).ToArray(), 0);
-                                    NdataList.Add(intD);
-                                }
-                                else
-                                    NdataList.Add(null);
-                            }
-                            // uint
-                            else if (config.DType == 5)
-                            {
-                                if (data.Count >= config.Offset + 4)
-                                {
-                                    uint uintD = BitConverter.ToUInt32(type.IsBig ? data.Skip(config.Offset).Take(4).Reverse().ToArray() : data.Skip(config.Offset).Take(4).ToArray(), 0);
-                                    NdataList.Add(uintD);
-                                }
-                                else
-                                    NdataList.Add(null);
-                            }
+                            else
+                                obj.Add(config.Tag, JToken.FromObject(data));
+                                //    string oJsonData = agv.JsonData;
+                                //    JArray socketData = new JArray();
+                                //    socketData.Add(JArray.FromObject(OdataList));
+                                //    socketData.Add(JArray.FromObject(NdataList));
+                                //    if (oJsonData != socketData.ToString(Formatting.None))
+                                //    {
+                                //        agv.JsonData = socketData.ToString(Formatting.None);
+                                //        Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString(Formatting.None));
                         }
-                        agv.NDataList = NdataList;
-
-                        string oJsonData = agv.JsonData;
-                        JArray socketData = new JArray();
-                        socketData.Add(JArray.FromObject(OdataList));
-                        socketData.Add(JArray.FromObject(NdataList));
-                        if (oJsonData != socketData.ToString(Formatting.None))
-                        {
-                            agv.JsonData = socketData.ToString(Formatting.None);
-                            Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString(Formatting.None));
-                        }
-                        Websocket.WebsocketVM.Instance.SendData("online", new JObject { { "online", true }, { "name", agv.Name } }.ToString(Formatting.None));
+                        agv.JsonDataList = obj;
+                    //    Websocket.WebsocketVM.Instance.SendData("online", new JObject { { "online", true }, { "name", agv.Name } }.ToString(Formatting.None));
                     }
 
                     //JObject info = agvCfg.Value<JObject>("info");

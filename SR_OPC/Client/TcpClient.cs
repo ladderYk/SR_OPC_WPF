@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SR_OPC_WPF
+namespace SR_OPC_WPF.Client
 {
     public class TcpClient: IClient
     {

@@ -118,6 +118,7 @@
     </ApplicationDefinition>
     <Compile Include="ComData\BaseVM.cs" />
     <Compile Include="Client\IClient.cs" />
+    <Compile Include="Models\DeviceType_bak.cs" />
     <Compile Include="Models\DeviceType.cs" />
     <Compile Include="ResolveDataUtil.cs" />
     <Compile Include="Client\ModbusTcp.cs" />

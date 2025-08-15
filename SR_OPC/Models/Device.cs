@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using SR_OPC_WPF.Client;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,6 +28,8 @@ namespace SR_OPC_WPF.Models
         public string JsonData;
 
         public Dictionary<string, List<byte>> DataMap = new Dictionary<string, List<byte>>();
+        public Dictionary<string, List<object>> DataMap1 = new Dictionary<string, List<object>>();
+        public JObject JsonDataList = new JObject();
         public List<object> DataList = new List<object>();
         public List<object> NDataList = new List<object>();
         public ObservableCollection<object> DataList1 = new ObservableCollection<object>();
@@ -34,8 +38,6 @@ namespace SR_OPC_WPF.Models
         public bool IsReg;
         [IgnoreDataMember]
         public IClient Client;
-        [IgnoreDataMember]
-        public AsyncTcpClient tcpClient;
 
         [IgnoreDataMember]
         public Thread OnlineThread;

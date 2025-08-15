@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SR_OPC_WPF.Models
 {
-   public class DeviceType
+   public class DeviceType_bak
     {
         public Guid ID;
         public string Name;
@@ -16,30 +16,34 @@ namespace SR_OPC_WPF.Models
         public TypeWrite[] Write;
         public TypeConfig[] Config;
     }
-    public class TypeRead
+    public class TypeRead_bak
     {
         public string Addr;
         public int Len;
         public string Tag;
         public string Name;
-        public int[] Config;
+        
     }
-    public class TypeReadVal
+    public class TypeReadVal_bak
     {
         public string Tag;
         public string Name;
         public object Data;
 
     }
-    public class TypeWrite
+    public class TypeWrite_bak
     {
         public string Addr;
         public string Tag;
     }
-    public class TypeConfig
+    public class TypeConfig_bak
     {
+        public string ID;
+        public string Addr;
+        public string Name;
         public string Tag;
-        public string[] Source;
         public int Offset;
+        public int DType;
+        public bool Disable;
     }
 }
