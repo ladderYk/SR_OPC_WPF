@@ -24,14 +24,22 @@ namespace SR_OPC_WPF.Models
         public int Timeout;
         public int Cycle;
 
+        [IgnoreDataMember]
         public bool IsConnected;
+        [IgnoreDataMember]
         public string JsonData;
 
+        [IgnoreDataMember]
         public Dictionary<string, List<byte>> DataMap = new Dictionary<string, List<byte>>();
+        [IgnoreDataMember]
         public Dictionary<string, List<object>> DataMap1 = new Dictionary<string, List<object>>();
+        [IgnoreDataMember]
         public JObject JsonDataList = new JObject();
+        [IgnoreDataMember]
         public List<object> DataList = new List<object>();
+        [IgnoreDataMember]
         public List<object> NDataList = new List<object>();
+        [IgnoreDataMember]
         public ObservableCollection<object> DataList1 = new ObservableCollection<object>();
 
         [IgnoreDataMember]

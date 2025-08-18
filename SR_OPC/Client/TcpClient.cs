@@ -40,7 +40,10 @@ namespace SR_OPC_WPF.Client
             else
             {
                 #region 西门子plc
-                object typeObj = MainWindow.DeviceTypes.FirstOrDefault(d => d.Name == agv.Model).Type[1];
+                DeviceType ev = MainWindow.DeviceTypes.FirstOrDefault(d => d.Name == agv.Model);
+                if (ev == null)
+                    return;
+                object typeObj = ev.Type[1];
                 int type = int.Parse(typeObj.ToString());
                 siemensTcpNet = new SiemensClient((SiemensVersion)type, agv.IP, agv.Port, 0, 0, agv.Timeout);
                 Result result = siemensTcpNet.Open();

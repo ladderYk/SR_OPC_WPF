@@ -34,18 +34,21 @@ namespace SR_OPC_WPF
                 if (!agv.IsConnected && !agv.IsReg)
                 {
                     DeviceType type = MainWindow.DeviceTypes.FirstOrDefault(d => d.Name == agv.Model);
-
-                    if (agv.Client == null)
+                    if (type != null)
                     {
-                        if ((string)type.Type[0] == "Siemens")
-                            agv.Client = new TcpClient(agv);
-                        else if ((string)type.Type[0] == "ModbusTcp")
-                            agv.Client = new ModbusTcp(agv);
+
+                        if (agv.Client == null)
+                        {
+                            if ((string)type.Type[0] == "Siemens")
+                                agv.Client = new TcpClient(agv);
+                            else if ((string)type.Type[0] == "ModbusTcp")
+                                agv.Client = new ModbusTcp(agv);
+                        }
+                        agv.Client.ConnectServer();
                     }
                     //if (agv.tcpClient == null)
                     //    agv.tcpClient = new AsyncTcpClient(agv);
                     agv.IsReg = true;
-                    agv.Client.ConnectServer();
                     // agv.tcpClient.OnConnectedCallback += ResolveDataUtil.OnConnectedCallback;
                     //agv.tcpClient.ConnectServer();
                     //Utils.AddErr(agv.Name, "连接中", "100");
@@ -65,7 +68,7 @@ namespace SR_OPC_WPF
         {
             Task.Run(delegate
             {
-                if (agv.IsConnected)
+                if (agv.IsConnected && agv.Client != null)
                 {
                     Dictionary<string, List<byte>> dataList = new Dictionary<string, List<byte>>();
                     Dictionary<string, List<object>> dataList1 = new Dictionary<string, List<object>>();
@@ -84,7 +87,7 @@ namespace SR_OPC_WPF
                         if (dataBytes != null)
                         {
                             List<byte> rdataBytes = dataBytes.Reverse().ToList();
-                            OdataList.Add(new TypeReadVal() { Data = rdataBytes, Name = read.Name, Tag = read.Tag });
+                            OdataList.Add(new TypeReadVal(){ Name = read.Name, Tag=read.Tag, Data=rdataBytes });
                             int i = 0;
                             foreach (int dType in read.Config)
                             {
@@ -165,17 +168,18 @@ namespace SR_OPC_WPF
                             }
                             else
                                 obj.Add(config.Tag, JToken.FromObject(data));
-                                //    string oJsonData = agv.JsonData;
-                                //    JArray socketData = new JArray();
-                                //    socketData.Add(JArray.FromObject(OdataList));
-                                //    socketData.Add(JArray.FromObject(NdataList));
-                                //    if (oJsonData != socketData.ToString(Formatting.None))
-                                //    {
-                                //        agv.JsonData = socketData.ToString(Formatting.None);
-                                //        Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString(Formatting.None));
                         }
-                        agv.JsonDataList = obj;
-                    //    Websocket.WebsocketVM.Instance.SendData("online", new JObject { { "online", true }, { "name", agv.Name } }.ToString(Formatting.None));
+                        
+                        JObject oJsonData = agv.JsonDataList;
+                        if (!JObject.DeepEquals(oJsonData, obj))
+                        {
+                            JArray socketData = new JArray();
+                            socketData.Add(JArray.FromObject(OdataList));
+                            socketData.Add(obj);
+                            agv.JsonDataList = obj;
+                            Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString());
+                        }
+                        Websocket.WebsocketVM.Instance.SendData("online", new JObject { { "online", true }, { "name", agv.Name } }.ToString(Formatting.None));
                     }
 
                     //JObject info = agvCfg.Value<JObject>("info");

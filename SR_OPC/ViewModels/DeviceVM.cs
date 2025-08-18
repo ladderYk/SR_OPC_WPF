@@ -40,7 +40,7 @@ namespace SR_OPC_WPF.ViewModels
                 device.ID = Guid.NewGuid();
             if (typeIndex > -1)
             {
-                MainWindow.Devices[typeIndex].Client.DisConnected();
+                MainWindow.Devices[typeIndex].Client?.DisConnected();
                 MainWindow.Devices[typeIndex].SetVal(device);
                 string jsonfile = MainWindow.AGVFile;
                 JArray jObject = JArray.FromObject(MainWindow.Devices);
