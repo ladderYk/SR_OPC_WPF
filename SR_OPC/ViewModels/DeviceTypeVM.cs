@@ -26,7 +26,7 @@ namespace SR_OPC_WPF.ViewModels
             MainWindow.DeviceTypes.Add(device);
             string jsonfile = MainWindow.ModelFile;
             JArray jObject = JArray.FromObject(MainWindow.DeviceTypes);
-            File.WriteAllText(jsonfile, jObject.ToString());
+            File.WriteAllText(jsonfile, jObject.ToString(Formatting.None));
             return true;
         }
         public bool editDeviceType(string sbody)
@@ -38,7 +38,7 @@ namespace SR_OPC_WPF.ViewModels
             MainWindow.DeviceTypes[typeIndex] = device;
             string jsonfile = MainWindow.ModelFile;
             JArray jObject = JArray.FromObject(MainWindow.DeviceTypes);
-            File.WriteAllText(jsonfile, jObject.ToString());
+            File.WriteAllText(jsonfile, jObject.ToString(Formatting.None));
             return true;
         }
         private JObject reqBody(string code, string message, JToken data)

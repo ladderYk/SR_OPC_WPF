@@ -29,7 +29,7 @@ namespace SR_OPC_WPF.ViewModels
 
             string jsonfile = MainWindow.AGVFile;
             JArray jObject = JArray.FromObject(MainWindow.Devices);
-            File.WriteAllText(jsonfile, jObject.ToString());
+            File.WriteAllText(jsonfile, jObject.ToString(Formatting.None));
             return true;
         }
         public bool editDevice(string sbody)
@@ -44,7 +44,7 @@ namespace SR_OPC_WPF.ViewModels
                 MainWindow.Devices[typeIndex].SetVal(device);
                 string jsonfile = MainWindow.AGVFile;
                 JArray jObject = JArray.FromObject(MainWindow.Devices);
-                File.WriteAllText(jsonfile, jObject.ToString());
+                File.WriteAllText(jsonfile, jObject.ToString(Formatting.None));
                 return true;
             }
             return false;
