@@ -49,6 +49,13 @@ export const getDeviceList = () => {
   }
   return Promise.reject("错误");
 };
+export const getDeviceData = (name) => {
+  if (chrome.webview) {
+    const Device = chrome.webview.hostObjects.Device;
+    return Device.getDeviceData(name).then(handleRet);
+  }
+  return Promise.reject("错误");
+};
 
 const handleRet = (strResponse) => {
   var response = JSON.parse(strResponse);

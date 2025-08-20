@@ -70,9 +70,7 @@ namespace SR_OPC_WPF
             {
                 if (agv.IsConnected && agv.Client != null)
                 {
-                    Dictionary<string, List<byte>> dataList = new Dictionary<string, List<byte>>();
-                    Dictionary<string, List<object>> dataList1 = new Dictionary<string, List<object>>();
-                    List<object> NdataList = new List<object>();
+                    Dictionary<string, List<object>> dataList = new Dictionary<string, List<object>>();
                     List<object> OdataList = new List<object>();
                     DeviceType type = MainWindow.DeviceTypes.FirstOrDefault(d => d.Name == agv.Model);
 
@@ -145,14 +143,11 @@ namespace SR_OPC_WPF
                                 }
                                 i++;
                             }
-                            dataList.Add(read.Tag, rdataBytes);
-                            dataList1.Add(read.Tag, tdataList);
+                            dataList.Add(read.Tag, tdataList);
                         }
                     }
                     agv.DataMap = dataList;
-                    agv.DataMap1 = dataList1;
                     agv.DataList = OdataList;
-                    agv.NDataList = NdataList;
                     //JObject agvCfg = MainWindow.AgvCfg.Value<JObject>("s7");
                     //#region 获取数据
                     JObject obj = new JObject();
@@ -161,7 +156,7 @@ namespace SR_OPC_WPF
                         foreach (TypeConfig config in type.Config)
                         {
                             string[] source = config.Source;
-                            object data = agv.DataMap1[source[0]][int.Parse(source[1])];
+                            object data = agv.DataMap[source[0]][int.Parse(source[1])];
                             if (data is char[])
                             {
                                 obj.Add(config.Tag, (data as char[])[config.Offset] == '1');
@@ -177,7 +172,7 @@ namespace SR_OPC_WPF
                             socketData.Add(JArray.FromObject(OdataList));
                             socketData.Add(obj);
                             agv.JsonDataList = obj;
-                            Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString());
+                            Websocket.WebsocketVM.Instance.SendData("data/" + agv.Name, socketData.ToString(Formatting.None));
                         }
                         Websocket.WebsocketVM.Instance.SendData("online", new JObject { { "online", true }, { "name", agv.Name } }.ToString(Formatting.None));
                     }

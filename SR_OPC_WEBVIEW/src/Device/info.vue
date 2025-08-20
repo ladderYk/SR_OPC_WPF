@@ -8,19 +8,23 @@
             </el-table>
         </el-tab-pane>
         <el-tab-pane label="解析数据">
-            <el-table :data="cfgData">
+            <!-- <el-table :data="cfgData">
                 <el-table-column type="index" />
                 <el-table-column label="值">
                     <template #default="scope">
                         {{ scope.row }}
                     </template>
-                </el-table-column>
-            </el-table>
+</el-table-column>
+</el-table> -->
+            <JsonFormat v-model="cfgData" />
         </el-tab-pane>
     </el-tabs>
 </template>
 <script setup>
 import { onMounted, ref, onUnmounted, watch, watchEffect } from "vue";
+import JsonFormat from '../components/JsonFormat.vue';
+import { getDeviceData } from "../utils/dotnet";
+
 let sokect = null;
 
 const props = defineProps(['form'])
@@ -29,8 +33,14 @@ const form = props.form;
 var name;
 const options = ref([]);
 const initData = ref([]);
-const cfgData = ref([]);
+const cfgData = ref(null);
 watch(form, () => {
+    getDeviceData(form.Name).then(data => {
+        var oData = data[0];
+        var nData = data[1];
+        initData.value = oData;
+        cfgData.value = nData;
+    });
     sokect.send(JSON.stringify({ topic: 'data/' + name, action: 'unsubscribe' }));
     initData.value = [];
     cfgData.value = [];
@@ -47,6 +57,7 @@ watch(form, () => {
         cfgData.value = nData;
         //textarea.value.unshift(message.data);
     };
+
     name = form.Name;
 });
 onMounted(() => {
@@ -56,6 +67,12 @@ onMounted(() => {
     // fetch("/dType.json").then(v => v.json()).then(data => {
     //     options.value = data;
     // });
+    getDeviceData(form.Name).then(data => {
+        var oData = data[0];
+        var nData = data[1];
+        initData.value = oData;
+        cfgData.value = nData;
+    });
     sokect = new WebSocket(ws);
     name = form.Name;
     sokect.onopen = () => {

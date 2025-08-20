@@ -49,6 +49,17 @@ namespace SR_OPC_WPF.ViewModels
             }
             return false;
         }
+        public string getDeviceData(string name)
+        {
+            Device device = MainWindow.Devices.Find(dev => dev.Name == name);
+            JArray socketData = new JArray();
+            if (device != null)
+            {
+                socketData.Add(JArray.FromObject(device.DataList));
+                socketData.Add(device.JsonDataList);
+            }
+            return req("200", "", JArray.FromObject(socketData));
+        }
         private JObject reqBody(string code, string message, JToken data)
         {
             JObject reqData = new JObject();
