@@ -82,16 +82,19 @@ namespace SR_OPC_WPF.Client
         {
             try
             {
-                Result<byte[]> result = siemensTcpNet.Read(address,1 ,3 ,iLen);
+                Result<byte[]> result = siemensTcpNet.Read(address,1 ,3 , (ushort)(iLen / 2));
                 if (result.IsSucceed)
                 {
-                    byte[] resultBys = new byte[iLen];
-                    for (int i = 0; i<iLen; i++)
-                    {
-                        resultBys[i] = (byte)BitConverter.ToUInt16(result.Value.Skip(i * 2).Take(2).ToArray(), 0);
-                    }
+                    //byte[] resultBys = new byte[iLen];
+                    //for (int i = 0; i<iLen; i++)
+                    //{
+                    //    //resultBys[i] = (int)BitConverter.ToUInt16(result.Value.Skip(i * 2).Take(2).ToArray(), 0);
+                    //    //resultBys[i] = (byte)BitConverter.ToUInt16(result.Value.Skip(i * 2).Take(2).ToArray(), 0);
+                    //    resultBys[i] = result.Value[i + 1];
+                    //    resultBys[i+1] = result.Value[i];
+                    //}
 
-                    return resultBys;
+                    return result.Value.Take(iLen).Reverse().ToArray();
                 }
                 else
                 {
